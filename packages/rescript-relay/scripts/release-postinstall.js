@@ -73,7 +73,7 @@ function ppxArch() {
     // If %SystemRoot%\SysNative exists, we are in a WOW64 FS Redirected application.
     var isWOW64 = false;
     try {
-      isWOW64 = !!fs.statSync(path.join(sysRoot, "sysnative"));
+      isWOW64 = !!fs.statSync(path.join(sysRoot, "sysnative")) || !!fs.statSync(path.join(sysRoot, "SysWOW64"));
     } catch (err) {}
 
     return isWOW64 ? "x64" : "x86";
