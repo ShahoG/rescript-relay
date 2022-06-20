@@ -60,8 +60,7 @@ jobs:
   build-ppx:
     strategy:
       matrix:
-        # Add Windows here when it gets supported
-        platform: [macos-latest]
+        platform: [macos-latest, windows-latest]
 
     name: Build PPX for release
     runs-on: ${{ matrix.platform }}
@@ -86,7 +85,7 @@ jobs:
         run: esy test
       - name: Copy built PPX file
         run: |
-          mv ./_esy/default/build/default/bin/RescriptRelayPpxApp.exe ${{ fromJson('{ "ubuntu-latest": "ppx-linux", "macos-latest": "ppx-darwin" }')[matrix.platform] }}
+          mv ./_esy/default/build/default/bin/RescriptRelayPpxApp.exe ${{ fromJson('{ "ubuntu-latest": "ppx-linux", "macos-latest": "ppx-darwin", "windows-latest": "ppx-darwin" }')[matrix.platform] }}
       - name: Upload PPX artifact
         uses: actions/upload-artifact@v2
         with:
@@ -107,6 +106,10 @@ jobs:
             os: macos-latest
             build-name: relay
             artifact-name: relay-compiler-macos-x64
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+            build-name: relay
+            artifact-name: relay-compiler-windows-x64
           - target: aarch64-apple-darwin
             os: macos-latest
             build-name: relay
@@ -174,6 +177,12 @@ jobs:
         with:
           name: relay-compiler-macos-x64
           path: binaries/relay-compiler-macos-x64
+      
+      - name: Download artifact relay-compiler-windows-x64
+        uses: actions/download-artifact@v2
+        with:
+          name: relay-compiler-windows-x64
+          path: binaries/relay-compiler-windows-x64
 
       - name: Download artifact relay-compiler-macos-arm64
         uses: actions/download-artifact@v2
@@ -210,6 +219,7 @@ jobs:
             relay-compiler-macos-x64
             relay-compiler-macos-arm64
             relay-compiler-linux-musl
+            relay-compiler-windows-x64
       - name: Upload built folder
         uses: actions/upload-artifact@v2
         with:

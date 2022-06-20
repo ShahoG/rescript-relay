@@ -58,7 +58,7 @@ jobs:
   ppx:
     strategy:
       matrix:
-        platform: [macos-latest]
+        platform: [macos-latest, windows-latest]
 
     name: PPX
     runs-on: ${{ matrix.platform }}
